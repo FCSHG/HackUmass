@@ -5,22 +5,18 @@ from django.utils import timezone
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField("date published")
+    description = models.CharField(max_length=10000, default="")
     def __str__(self):
         return self.question_text
     def was_published_recently(self):
         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
 
-class Review(models.Model):
-    coursename = models.CharField(max_length= 100)
-    subject = models.CharField(max_length= 100)
-    pub_date = models.DateTimeField("date published")
-    rating =  models.IntegerField()
-    comment = models.CharField(max_length= 1000)
+class Rating(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    rating_str = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
     def __str__(self):
-        return self.coursename
-
-
-
+        return self.rating_str
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
